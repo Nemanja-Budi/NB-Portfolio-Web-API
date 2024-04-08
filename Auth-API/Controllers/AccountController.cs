@@ -70,7 +70,7 @@ namespace Auth_API.Controllers
             var result = await userManager.CreateAsync(userToAdd, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
 
-            return Ok("Your account has been created, you can login");
+            return Ok(new JsonResult(new {title = "Account Created", message = "Your account has been created, you can login" }));
         }
 
 

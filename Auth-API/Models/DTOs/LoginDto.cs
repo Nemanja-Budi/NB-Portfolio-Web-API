@@ -4,7 +4,7 @@ namespace Auth_API.Models.DTOs
 {
     public class LoginDto
     {
-        [Required]
+        [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; }
         
         [Required]
