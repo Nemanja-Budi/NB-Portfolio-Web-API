@@ -9,6 +9,9 @@ namespace Auth_API
         public const string ManagerRole = "Manager";
         public const string PlayerRole = "Player";
 
+        public const string AdminUserName = "admin@example.com";
+        public const string SuperAdminChangeNotAllowed = "Super Admin change is not allowed";
+
         public static bool VIPPolicy(AuthorizationHandlerContext authorizationHandlerContext)
         {
             if( authorizationHandlerContext.User.IsInRole(PlayerRole) && 

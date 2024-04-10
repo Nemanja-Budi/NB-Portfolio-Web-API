@@ -53,6 +53,11 @@ namespace Auth_API.Controllers
 
             var result = await signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
+            if(result.IsLockedOut)
+            {
+                return Unauthorized(string.Format("Your account has been locked. You should wait until {0} (UTC time) to be able to login", user.LockoutEnd));
+            }
+
             if (!result.Succeeded) return Unauthorized("Invalid username or password");
 
             return await CreateApplicationUserDto(user);
