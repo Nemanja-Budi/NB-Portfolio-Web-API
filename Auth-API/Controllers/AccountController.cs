@@ -39,7 +39,7 @@ namespace Auth_API.Controllers
         public async Task<ActionResult<UserDto>> RefreshUserToken()
         {
             var user = await userManager.FindByNameAsync(User.FindFirst(ClaimTypes.Email)?.Value);
-            return CreateApplicationUserDto(user);
+            return await CreateApplicationUserDto(user);
         }
 
         [HttpPost("login")]
@@ -55,7 +55,7 @@ namespace Auth_API.Controllers
 
             if (!result.Succeeded) return Unauthorized("Invalid username or password");
 
-            return CreateApplicationUserDto(user);
+            return await CreateApplicationUserDto(user);
         }
 
         [HttpPost("register")]
@@ -197,13 +197,13 @@ namespace Auth_API.Controllers
             }
         }
 
-        private UserDto CreateApplicationUserDto(User user)
+        private async Task<UserDto> CreateApplicationUserDto(User user)
         {
             return new UserDto
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                JWT = jWTService.CreateJWT(user),
+                JWT = await jWTService.CreateJWT(user),
             };
         }
 
