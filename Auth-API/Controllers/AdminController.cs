@@ -80,7 +80,8 @@ namespace Auth_API.Controllers
                 {
                     FirstName = memberAddEditDto.FirstName.ToLower(),
                     LastName = memberAddEditDto.LastName.ToLower(),
-                    UserName = memberAddEditDto.UserName,
+                    UserName = memberAddEditDto.UserName.ToLower(),
+                    Email = memberAddEditDto.UserName.ToLower(),
                     EmailConfirmed = true
                 };
 
