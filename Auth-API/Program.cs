@@ -33,7 +33,6 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 });
 
 builder.Services.AddScoped<JWTService>();
-builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<ContextSeedService>();
 
 builder.Services.AddIdentityCore<User>(options =>
@@ -87,24 +86,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
-builder.Services.AddAuthorization(option => 
-    {
-        option.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-        option.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
-        option.AddPolicy("PlayerPolicy", policy => policy.RequireRole("Player"));
 
-        option.AddPolicy("AdminOrManagerPolicy", policy => policy.RequireRole("Admin", "Manager"));
-        option.AddPolicy("AdminAndManagerPolicy", policy => policy.RequireRole("Admin").RequireRole("Manager"));
-        option.AddPolicy("AllRolePolicy", policy => policy.RequireRole("Admin", "Manager", "Player"));
-
-        option.AddPolicy("AdminEmailPolicy", policy => policy.RequireClaim(ClaimTypes.Email, "admin@example.com"));
-        option.AddPolicy("MillerSurnamePolicy", policy => policy.RequireClaim(ClaimTypes.Surname, "miller"));
-
-        option.AddPolicy("ManagerEmailAndWilsonSurnamePolicy", policy => policy
-            .RequireClaim(ClaimTypes.Surname, "wilson")
-            .RequireClaim(ClaimTypes.Email, "manager@example.com"));
-        option.AddPolicy("VIPPolicy", policy => policy.RequireAssertion(context => SD.VIPPolicy(context)));
-    });
 
 var app = builder.Build();
 
