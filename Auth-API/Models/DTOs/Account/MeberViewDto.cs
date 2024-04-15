@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Auth_API.Models.DTOs
+namespace Auth_API.Models.DTOs.Account
 {
     public class MemberViewDto
     {

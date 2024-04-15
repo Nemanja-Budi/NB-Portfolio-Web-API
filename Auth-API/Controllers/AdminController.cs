@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Auth_API.Models.Domain;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Auth_API.Models.DTOs;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.IdentityModel.Tokens;
+using Auth_API.Models.DTOs.Account;
 
 namespace Auth_API.Controllers
 {

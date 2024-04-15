@@ -1,5 +1,5 @@
 ﻿using Auth_API.Models.Domain;
-using Auth_API.Models.DTOs;
+using Auth_API.Models.DTOs.Account;
 using Auth_API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

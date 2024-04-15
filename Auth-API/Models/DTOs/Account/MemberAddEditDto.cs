@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Auth_API.Models.DTOs
+namespace Auth_API.Models.DTOs.Account
 {
     public class MemberAddEditDto
     {

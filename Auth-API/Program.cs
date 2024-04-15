@@ -1,6 +1,7 @@
 using Auth_API;
 using Auth_API.Data;
 using Auth_API.Models.Domain;
+using Auth_API.Repositories;
 using Auth_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,13 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddDbContext<ContactDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ContactConnection"));
+});
+
+builder.Services.AddScoped<IContactRepository, SQLContactRepository>();
 
 builder.Services.AddScoped<JWTService>();
 builder.Services.AddScoped<ContextSeedService>();

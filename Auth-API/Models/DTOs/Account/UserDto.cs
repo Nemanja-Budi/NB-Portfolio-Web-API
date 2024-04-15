@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System;
 
-namespace Auth_API.Models.DTOs
+namespace Auth_API.Models.DTOs.Account
 {
     public class UserDto
     {
