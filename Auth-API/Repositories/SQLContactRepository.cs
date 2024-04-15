@@ -18,7 +18,14 @@ namespace Auth_API.Repositories
             this.contactDbContext = contactDbContext;
         }
 
-        public async Task<List<Contact>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true)
+        public async Task<List<Contact>> GetAllAsync(
+                string? filterOn = null, 
+                string? filterQuery = null, 
+                string? sortBy = null, 
+                bool isAscending = true,
+                int pageNumber = 1,
+                int pageSize = 1000
+            )
         {
             IQueryable<Contact> contacts = contactDbContext.Contacts;
 
@@ -38,7 +45,9 @@ namespace Auth_API.Repositories
                 }               
             }
 
-            return await contacts.ToListAsync();
+            var skipResults = (pageNumber - 1) * pageSize;
+
+            return await contacts.Skip(skipResults).Take(pageSize).ToListAsync();
         }
 
 
