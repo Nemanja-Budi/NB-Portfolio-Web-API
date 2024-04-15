@@ -61,9 +61,9 @@ namespace Auth_API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("get-contacts")]
-        public async Task<IActionResult> GetAllContacts()
+        public async Task<IActionResult> GetAllContacts([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
-            var contactsDomain = await contactRepository.GetAllAsync();
+            var contactsDomain = await contactRepository.GetAllAsync(filterOn, filterQuery);
 
             return Ok(mapper.Map<List<ContactDto>>(contactsDomain));
         }

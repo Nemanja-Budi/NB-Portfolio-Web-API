@@ -1,7 +1,10 @@
 ﻿using Auth_API.Data;
 using Auth_API.Models.Domain.Contact;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Auth_API.Repositories
@@ -15,12 +18,23 @@ namespace Auth_API.Repositories
             this.contactDbContext = contactDbContext;
         }
 
-        public async Task<List<Contact>> GetAllAsync()
+        public async Task<List<Contact>> GetAllAsync([FromQuery] string? filterOn = null, [FromQuery] string? filterQuery = null)
         {
-            return await contactDbContext.Contacts.ToListAsync();
+            IQueryable<Contact> contacts = contactDbContext.Contacts;
+
+            if (!string.IsNullOrWhiteSpace(filterOn) && !string.IsNullOrWhiteSpace(filterQuery))
+            {
+                if (filterOn.Equals("NameOfCompany", StringComparison.OrdinalIgnoreCase))
+                {
+                    contacts = contacts.Where(x => x.NameOfCompany.Contains(filterQuery));
+                }
+            }
+
+            return await contacts.ToListAsync();
         }
 
-        public async Task<Contact> GetByIdAsync(string id)
+
+        public async Task<Contact?> GetByIdAsync(string id)
         {
             return await contactDbContext.Contacts.FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -33,7 +47,7 @@ namespace Auth_API.Repositories
             return contact;
         }
 
-        public async Task<Contact> DeleteAsync(string id)
+        public async Task<Contact?> DeleteAsync(string id)
         {
             var existingContact = await contactDbContext.Contacts.FirstOrDefaultAsync(x => x.Id == id);
             if (existingContact == null) 
