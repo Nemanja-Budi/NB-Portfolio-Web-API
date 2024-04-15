@@ -2,6 +2,7 @@
 using Auth_API.Models.Domain.Contact;
 using Auth_API.Models.DTOs.Contact;
 using Auth_API.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,12 @@ namespace Auth_API.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly IContactRepository contactRepository;
+        private readonly IMapper mapper;
 
-        public ContactsController(IContactRepository contactRepository)
+        public ContactsController(IContactRepository contactRepository,IMapper mapper)
         {
             this.contactRepository = contactRepository;
+            this.mapper = mapper;
         }
 
         [HttpPost("add-new-contact")]
@@ -34,16 +37,10 @@ namespace Auth_API.Controllers
                 Email = contactDTO.Email,
                 Message = contactDTO.Message
             };
-
+            
             contactDomainModel = await contactRepository.CreateAsync(contactDomainModel);
 
-            var contactDto = new ContactDto
-            {
-                Id = contactDomainModel.Id,
-                NameOfCompany = contactDomainModel.NameOfCompany,
-                Email = contactDomainModel.Email,
-                Message = contactDomainModel.Message
-            };
+            var contactDto = mapper.Map<ContactDto>(contactDomainModel);
 
             return CreatedAtAction(nameof(GetContactById), new { id = contactDto.Id}, contactDto);
         }
@@ -58,16 +55,8 @@ namespace Auth_API.Controllers
             {
                 return NotFound();
             }
-
-            var contactDto = new ContactDto
-            {
-                Id = contactDomain.Id,
-                NameOfCompany = contactDomain.NameOfCompany,
-                Email = contactDomain.Email,
-                Message = contactDomain.Message
-            };
-
-            return Ok(contactDto);
+                
+            return Ok(mapper.Map<ContactDto>(contactDomain));
         }
 
         [Authorize(Roles = "Admin")]
@@ -75,20 +64,8 @@ namespace Auth_API.Controllers
         public async Task<IActionResult> GetAllContacts()
         {
             var contactsDomain = await contactRepository.GetAllAsync();
-            var contactDto = new List<ContactDto>();
 
-            foreach (var contactDomain in contactsDomain)
-            {
-                contactDto.Add(new ContactDto()
-                {
-                    Id = contactDomain.Id,
-                    NameOfCompany = contactDomain.NameOfCompany,
-                    Email = contactDomain.Email,
-                    Message = contactDomain.Message,
-                });
-            }
-
-            return Ok(contactDto);
+            return Ok(mapper.Map<List<ContactDto>>(contactsDomain));
         }
 
         [Authorize(Roles = "Admin")]
@@ -102,15 +79,7 @@ namespace Auth_API.Controllers
                 return NotFound();
             }
 
-            var contactDto = new ContactDto
-            {
-                Id = existingContact.Id,
-                NameOfCompany = existingContact.NameOfCompany,
-                Email = existingContact.Email,
-                Message = existingContact.Message,
-            };
-
-            return Ok(contactDto);
+            return Ok(mapper.Map<ContactDto>(existingContact));
         }
     }
 }

@@ -1,8 +1,10 @@
 using Auth_API;
 using Auth_API.Data;
+using Auth_API.Mappings;
 using Auth_API.Models.Domain;
 using Auth_API.Repositories;
 using Auth_API.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +41,14 @@ builder.Services.AddDbContext<ContactDbContext>(options =>
 });
 
 builder.Services.AddScoped<IContactRepository, SQLContactRepository>();
+
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfiles>();
+});
+
+var mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<JWTService>();
 builder.Services.AddScoped<ContextSeedService>();
