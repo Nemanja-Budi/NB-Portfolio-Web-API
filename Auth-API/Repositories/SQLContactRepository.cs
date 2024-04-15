@@ -18,7 +18,7 @@ namespace Auth_API.Repositories
             this.contactDbContext = contactDbContext;
         }
 
-        public async Task<List<Contact>> GetAllAsync([FromQuery] string? filterOn = null, [FromQuery] string? filterQuery = null)
+        public async Task<List<Contact>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true)
         {
             IQueryable<Contact> contacts = contactDbContext.Contacts;
 
@@ -28,6 +28,14 @@ namespace Auth_API.Repositories
                 {
                     contacts = contacts.Where(x => x.NameOfCompany.Contains(filterQuery));
                 }
+            }
+
+            if(string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if(sortBy.Equals("NameOfCompany", StringComparison.OrdinalIgnoreCase))
+                {
+                    contacts = isAscending ? contacts.OrderBy(x => x.NameOfCompany) : contacts.OrderByDescending(x => x.NameOfCompany);
+                }               
             }
 
             return await contacts.ToListAsync();
