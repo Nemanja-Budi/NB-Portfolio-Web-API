@@ -59,7 +59,7 @@ namespace Auth_API.Controllers
             return Ok(mapper.Map<ContactDto>(contactDomain));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet("get-contacts")]
         public async Task<IActionResult> GetAllContacts(
                 [FromQuery] string? filterOn, 

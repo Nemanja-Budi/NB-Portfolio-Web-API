@@ -28,23 +28,89 @@ namespace Auth_API.Controllers
         }
 
         [HttpGet("get-members")]
-        public async Task<ActionResult<IEnumerable<MemberViewDto>>> GetMembers()
+        public async Task<ActionResult<IEnumerable<MemberViewDto>>> GetMembers(
+            string? filterOn = null,
+            string? filterQuery = null,
+            string? sortBy = null,
+            bool isAscending = true,
+            int pageNumber = 1,
+            int pageSize = 1000)
         {
-            var members = await userManager.Users
-                .Where(x => x.UserName != SD.AdminUserName)
+            var query = userManager.Users
+                .Where(x => x.UserName != SD.AdminUserName);
+
+            if (!string.IsNullOrEmpty(filterOn) && !string.IsNullOrEmpty(filterQuery))
+            {
+                switch (filterOn.ToLower())
+                {
+                    case "username":
+                        query = query.Where(x => x.UserName.Contains(filterQuery));
+                        break;
+                    case "firstname":
+                        query = query.Where(x => x.FirstName.Contains(filterQuery));
+                        break;
+                    case "lastname":
+                        query = query.Where(x => x.LastName.Contains(filterQuery));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy.ToLower())
+                {
+                    case "username":
+                        query = isAscending ? query.OrderBy(x => x.UserName) : query.OrderByDescending(x => x.UserName);
+                        break;
+                    case "firstname":
+                        query = isAscending ? query.OrderBy(x => x.FirstName) : query.OrderByDescending(x => x.FirstName);
+                        break;
+                    case "lastname":
+                        query = isAscending ? query.OrderBy(x => x.LastName) : query.OrderByDescending(x => x.LastName);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var paginatedMembers = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(member => new MemberViewDto
-                { 
+                {
                     Id = member.Id,
                     UserName = member.UserName,
                     FirstName = member.FirstName,
                     LastName = member.LastName,
-                    DateCreated =  member.DataCreated,
+                    DateCreated = member.DataCreated,
                     IsLocked = userManager.IsLockedOutAsync(member).GetAwaiter().GetResult(),
                     Roles = userManager.GetRolesAsync(member).GetAwaiter().GetResult()
-                }).ToListAsync();
+                })
+                .ToListAsync();
 
-            return  Ok(members);
+            return Ok(paginatedMembers);
         }
+    
+    /*public async Task<ActionResult<IEnumerable<MemberViewDto>>> GetMembers()
+    {
+        var members = await userManager.Users
+            .Where(x => x.UserName != SD.AdminUserName)
+            .Select(member => new MemberViewDto
+            { 
+                Id = member.Id,
+                UserName = member.UserName,
+                FirstName = member.FirstName,
+                LastName = member.LastName,
+                DateCreated =  member.DataCreated,
+                IsLocked = userManager.IsLockedOutAsync(member).GetAwaiter().GetResult(),
+                Roles = userManager.GetRolesAsync(member).GetAwaiter().GetResult()
+            }).ToListAsync();
+
+        return  Ok(members);
+    }
+    */
 
         [HttpGet("get-member/{id}")]
         public async Task<ActionResult<MemberAddEditDto>> GetMember(string id) 
