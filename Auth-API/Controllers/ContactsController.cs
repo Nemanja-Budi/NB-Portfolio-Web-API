@@ -70,6 +70,8 @@ namespace Auth_API.Controllers
                 [FromQuery] int pageSize = 1000
             )
         {
+            var contactTotalLength = await contactRepository.GetAllAsync(filterOn, filterQuery);
+
             var contactsDomain = await contactRepository.GetAllAsync(
                 filterOn, 
                 filterQuery, 
@@ -79,7 +81,10 @@ namespace Auth_API.Controllers
                 pageSize
             );
 
-            return Ok(mapper.Map<List<ContactDto>>(contactsDomain));
+            var contact = mapper.Map<List<ContactDto>>(contactsDomain);
+
+            return Ok(new { Contacts = contact, TotalCount = contactTotalLength.Count });
+
         }
 
         [Authorize(Roles = "Admin")]
