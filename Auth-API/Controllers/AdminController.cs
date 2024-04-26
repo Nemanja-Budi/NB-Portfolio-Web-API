@@ -57,6 +57,8 @@ namespace Auth_API.Controllers
                 }
             }
 
+            var memberTotalLength = await query.CountAsync();
+
             if (!string.IsNullOrEmpty(sortBy))
             {
                 switch (sortBy.ToLower())
@@ -89,8 +91,7 @@ namespace Auth_API.Controllers
                     Roles = userManager.GetRolesAsync(member).GetAwaiter().GetResult()
                 })
                 .ToListAsync();
-
-            return Ok(paginatedMembers);
+            return Ok(new {members = paginatedMembers, TotalCount = memberTotalLength });
         }
     
     /*public async Task<ActionResult<IEnumerable<MemberViewDto>>> GetMembers()
