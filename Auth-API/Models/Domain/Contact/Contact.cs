@@ -2,9 +2,12 @@
 {
     public class Contact
     {
-        public string Id { get; set; }
-        public string NameOfCompany { get; set; }
-        public string Email { get; set; }
-        public string Message { get; set; }
+        public string? Id { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+
+        public required string NameOfCompany { get; set; }
+        public required string Email { get; set; }
+        public required string Message { get; set; }
     }
 }

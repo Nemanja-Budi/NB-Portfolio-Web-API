@@ -91,7 +91,7 @@ namespace Auth_API.Controllers
                     Roles = userManager.GetRolesAsync(member).GetAwaiter().GetResult()
                 })
                 .ToListAsync();
-            return Ok(new {members = paginatedMembers, TotalCount = memberTotalLength });
+            return Ok(new {members = paginatedMembers, TotalCount = memberTotalLength  });
         }
     
     /*public async Task<ActionResult<IEnumerable<MemberViewDto>>> GetMembers()

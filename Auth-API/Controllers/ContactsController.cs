@@ -33,6 +33,8 @@ namespace Auth_API.Controllers
             var contactDomainModel = new Contact
             {
                 Id = Guid.NewGuid().ToString(),
+                FirstName = contactDTO.FirstName,
+                LastName = contactDTO.LastName,
                 NameOfCompany = contactDTO.NameOfCompany,
                 Email = contactDTO.Email,
                 Message = contactDTO.Message
